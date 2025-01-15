@@ -9,15 +9,13 @@ class GalleryItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Flexible(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 500),
-            child: Image.asset(
-              scale: 0.5,
-              item.imagePath,
-              width: double.infinity,
-              fit: BoxFit.fitWidth,
-            ),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: 500),
+          child: Image.asset(
+            scale: 0.5,
+            item.imagePath,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
           ),
         ),
         Padding(

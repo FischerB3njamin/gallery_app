@@ -17,6 +17,9 @@ class _MainAppState extends State<MainApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
           backgroundColor: Color.fromARGB(255, 89, 7, 36),
           title: Text(
             "Gallery",
