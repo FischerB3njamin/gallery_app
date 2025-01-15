@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gallery_app/pages/gallery_page.dart';
-import 'package:gallery_app/pages/about_me.dart';
+import 'package:gallery_app/data/navigation.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -26,23 +25,14 @@ class _MainAppState extends State<MainApp> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-        body: [GalleryPage(), AboutMe()][activeIndex],
+        body: Navigation.pages[activeIndex],
         bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Color.fromARGB(255, 241, 234, 246),
             currentIndex: activeIndex,
             onTap: (value) => setState(() {
                   activeIndex = value;
                 }),
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.image),
-                label: "Bilder",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "Über mich",
-              ),
-            ]),
+            items: Navigation.navigationItem),
       ),
     );
   }
