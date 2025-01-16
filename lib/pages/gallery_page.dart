@@ -16,21 +16,27 @@ class GalleryPage extends StatelessWidget {
         for (final item in galleryData)
           GestureDetector(
             onTap: () {
-              Scaffold.of(context).showBottomSheet((BuildContext context) {
-                return GalleryItemView(item: item);
-              });
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) =>
+                        GalleryItemView(index: galleryData.indexOf(item))),
+              );
             },
             child: Card(
               clipBehavior: Clip.hardEdge,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    child: Image.asset(item.imagePath, fit: BoxFit.cover),
+                    child: Image.asset(
+                      item.imagePath,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
                   ),
-                  SizedBox(height: 8),
-                  Center(child: Text(item.imageTitle)),
-                  SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Center(child: Text(item.imageTitle)),
+                  ),
                 ],
               ),
             ),
