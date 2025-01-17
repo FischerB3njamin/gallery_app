@@ -1,9 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_app/data/gallery_data.dart';
-import 'package:gallery_app/pages/gallery_item_view.dart';
+import 'package:gallery_app/data/gallery_item.dart';
+import 'package:gallery_app/custom_widgets/gallery_card.dart';
+import 'package:gallery_app/pages/gallery_new_item_page.dart';
+import 'package:gallery_app/services/gallery_service.dart';
 
-class GalleryPage extends StatelessWidget {
+class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
+
+  @override
+  State<GalleryPage> createState() => _GalleryPageState();
+}
+
+class _GalleryPageState extends State<GalleryPage> {
+  List<GalleryItem> gallery = galleryData;
+
+  void handleFloatingActionButton() async {
+    if (await Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => GalleryNewItem()),
+        ) ??
+        false) {
+      init();
+    }
+  }
+
+  void init() {
+    setState(() {
+      gallery = GalleryService.gallery;
+    });
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,34 +44,24 @@ class GalleryPage extends StatelessWidget {
       crossAxisSpacing: 8,
       padding: EdgeInsets.all(8),
       children: [
-        for (final item in galleryData)
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) =>
-                        GalleryItemView(index: galleryData.indexOf(item))),
-              );
-            },
-            child: Card(
-              clipBehavior: Clip.hardEdge,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Image.asset(
-                      item.imagePath,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Center(child: Text(item.imageTitle)),
-                  ),
-                ],
-              ),
+        for (final item in gallery)
+          GalleryCard(
+            item: item,
+            callback: init,
+          ),
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: FloatingActionButton(
+            elevation: 1,
+            backgroundColor: Color.fromARGB(255, 89, 7, 36),
+            onPressed: () => handleFloatingActionButton(),
+            child: Icon(
+              Icons.add_a_photo_outlined,
+              color: Colors.white,
+              size: 48,
             ),
-          )
+          ),
+        ),
       ],
     );
   }

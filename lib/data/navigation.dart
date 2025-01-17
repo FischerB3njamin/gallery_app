@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gallery_app/pages/about_me.dart';
+import 'package:gallery_app/pages/about_me_page.dart';
 import 'package:gallery_app/pages/gallery_page.dart';
 
 abstract class Navigation {

@@ -3,12 +3,12 @@ class GalleryItem {
   String imageDate;
   String imageDescription;
   String imagePath;
-  String? imagesubHeadline;
+  bool custom;
 
   GalleryItem(
       {required this.imageDate,
       required this.imageDescription,
       required this.imagePath,
       required this.imageTitle,
-      this.imagesubHeadline});
+      this.custom = false});
 }

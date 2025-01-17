@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gallery_app/data/gallery_data.dart';
 import 'package:gallery_app/data/gallery_item.dart';
+import 'package:gallery_app/pages/gallery_new_item_page.dart';
+import 'package:gallery_app/services/gallery_service.dart';
 
 class GalleryItemView extends StatefulWidget {
   int index;
@@ -12,14 +13,24 @@ class GalleryItemView extends StatefulWidget {
 
 class _GalleryItemViewState extends State<GalleryItemView> {
   bool allowed = true;
+  late List<GalleryItem> gallery;
 
-  bool checkSwipeRight(int index, double direction) {
-    return (direction < -8 && widget.index + 1 < galleryData.length);
+  @override
+  void initState() {
+    init();
+    super.initState();
   }
 
-  bool checkSwipeLeft(int index, double direction) {
-    return (direction > 8 && widget.index - 1 >= 0);
-  }
+  void init() => setState(() => gallery = GalleryService.gallery);
+
+  void showSnackbar(item) => ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("${item.imageTitle} wurde gelöscht ")));
+
+  bool checkSwipeRight(int index, double direction) =>
+      (direction < -8 && widget.index + 1 < gallery.length);
+
+  bool checkSwipeLeft(int index, double direction) =>
+      (direction > 8 && widget.index - 1 >= 0);
 
   void handleSwipe(DragUpdateDetails details) {
     if (allowed) {
@@ -31,9 +42,24 @@ class _GalleryItemViewState extends State<GalleryItemView> {
     }
   }
 
+  void handleEdit(GalleryItem item) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => GalleryNewItem(item: item, isNew: false),
+      ),
+    );
+    init();
+  }
+
+  void handleDelete(GalleryItem item) {
+    GalleryService.deleteItem(item);
+    showSnackbar(item);
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    GalleryItem item = galleryData[widget.index];
+    GalleryItem item = gallery[widget.index];
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -44,6 +70,11 @@ class _GalleryItemViewState extends State<GalleryItemView> {
           item.imageTitle,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(onPressed: () => handleEdit(item), icon: Icon(Icons.edit)),
+          IconButton(
+              onPressed: () => handleDelete(item), icon: Icon(Icons.delete)),
+        ],
       ),
       body: GestureDetector(
         onHorizontalDragEnd: (_) => allowed = true,

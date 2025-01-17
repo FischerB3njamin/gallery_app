@@ -10,6 +10,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   int activeIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,9 +30,7 @@ class _MainAppState extends State<MainApp> {
         bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Color.fromARGB(255, 241, 234, 246),
             currentIndex: activeIndex,
-            onTap: (value) => setState(() {
-                  activeIndex = value;
-                }),
+            onTap: (value) => setState(() => activeIndex = value),
             items: Navigation.navigationItem),
       ),
     );
