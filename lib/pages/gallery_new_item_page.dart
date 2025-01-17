@@ -26,7 +26,11 @@ class _GalleryNewItemState extends State<GalleryNewItem> {
     _titleController.text = widget.item?.imageTitle ?? '';
     _dateController.text = widget.item?.imageDate ?? '';
     _descriptionController.text = widget.item?.imageDescription ?? '';
-    uploadedImage = (!widget.isNew ? widget.item?.imagePath : "")!;
+    uploadedImage = (widget.isNew
+        ? ""
+        : widget.item != null && widget.item!.custom
+            ? widget.item!.imagePath
+            : "");
   }
 
   void handleLoadImage() async {
@@ -71,45 +75,37 @@ class _GalleryNewItemState extends State<GalleryNewItem> {
     GalleryService.updateItem(widget.item!, newItem);
   }
 
+  Widget _buildImageDisplay() {
+    return uploadedImage.isNotEmpty
+        ? Image.file(File(uploadedImage), fit: BoxFit.cover)
+        : (widget.item != null && widget.item!.imagePath.isNotEmpty
+            ? Image.asset(widget.item!.imagePath, fit: BoxFit.cover)
+            : SizedBox(
+                height: 150,
+                width: 300,
+                child: Icon(Icons.add_a_photo, color: Colors.grey, size: 40)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
+          iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Color.fromARGB(255, 89, 7, 36),
-          title: Text(
-            "Neuer eintrag",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
+          title: Text("Neuer eintrag",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         ),
         body: ListView(
           padding: EdgeInsets.all(16),
           children: [
-            SizedBox(height: 16),
             NewItemTextField(textController: _titleController, label: "Titel"),
-            SizedBox(height: 16),
             NewItemTextField(textController: _dateController, label: "Datum"),
-            SizedBox(height: 16),
             NewItemTextField(
                 textController: _descriptionController, label: "Beschreibung"),
-            SizedBox(height: 16),
             GestureDetector(
               onTap: () => handleLoadImage(),
-              child: uploadedImage.isEmpty
-                  ? widget.item != null && !widget.item!.custom
-                      ? Image.asset(widget.item!.imagePath)
-                      : Container(
-                          height: 150,
-                          width: 300,
-                          decoration: BoxDecoration(
-                            border: Border(),
-                            color: Color.fromARGB(0, 213, 212, 212),
-                          ),
-                          child: Icon(Icons.add_a_photo),
-                        )
-                  : Image.file(File(uploadedImage)),
+              child: _buildImageDisplay(),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
@@ -120,16 +116,17 @@ class _GalleryNewItemState extends State<GalleryNewItem> {
                       child: Text('Abbrechen')),
                   Spacer(),
                   ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(
-                          Color.fromARGB(255, 89, 7, 36),
-                        ),
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        Color.fromARGB(255, 89, 7, 36),
                       ),
-                      onPressed: () => handleSave(),
-                      child: Text(
-                        'Speichern',
-                        style: TextStyle(color: Colors.white),
-                      )),
+                    ),
+                    onPressed: () => handleSave(),
+                    child: Text(
+                      'Speichern',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ],
               ),
             ),

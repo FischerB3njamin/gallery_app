@@ -9,12 +9,15 @@ class NewItemTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: null,
-      minLines: 1,
-      controller: textController,
-      decoration: InputDecoration(
-        labelText: label,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        maxLines: null,
+        minLines: 1,
+        controller: textController,
+        decoration: InputDecoration(
+          labelText: label,
+        ),
       ),
     );
   }
